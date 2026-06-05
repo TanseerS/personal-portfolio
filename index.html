@@ -205,7 +205,7 @@
           </li>
 
           <li class="navbar-item">
-            <button class="navbar-link" data-nav-link>Portfolio</button>
+            <button class="navbar-link" data-nav-link>Projects</button>
           </li>
 
           <li class="navbar-item">
@@ -514,13 +514,13 @@
 
 
       <!--
-        - #PORTFOLIO
+        - #PROJECTS
       -->
 
-      <article class="portfolio" data-page="portfolio">
+      <article class="projects" data-page="projects">
 
         <header>
-          <h2 class="h2 article-title">Portfolio</h2>
+          <h2 class="h2 article-title">Projects</h2>
         </header>
 
         <section class="projects">
@@ -532,15 +532,19 @@
             </li>
 
             <li class="filter-item">
-              <button data-filter-btn>Web design</button>
+              <button data-filter-btn disabled>AWS</button>
             </li>
 
             <li class="filter-item">
-              <button data-filter-btn>Applications</button>
+              <button data-filter-btn disabled>Terraform</button>
             </li>
 
             <li class="filter-item">
-              <button data-filter-btn>Web development</button>
+              <button data-filter-btn disabled>CI/CD</button>
+            </li>
+
+            <li class="filter-item">
+              <button data-filter-btn disabled>Kubernetes</button>
             </li>
 
           </ul>
@@ -564,15 +568,19 @@
               </li>
 
               <li class="select-item">
-                <button data-select-item>Web design</button>
+                <button data-select-item disabled>AWS</button>
               </li>
 
               <li class="select-item">
-                <button data-select-item>Applications</button>
+                <button data-select-item disabled>Terraform</button>
               </li>
 
               <li class="select-item">
-                <button data-select-item>Web development</button>
+                <button data-select-item disabled>CI/CD</button>
+              </li>
+
+              <li class="select-item">
+                <button data-select-item disabled>Kubernetes</button>
               </li>
 
             </ul>
@@ -581,171 +589,304 @@
 
           <ul class="project-list">
 
-            <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="#">
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="https://github.com/TanseerS/serverless-data-pipeline" target="_blank" rel="noopener noreferrer" data-modal-trigger>
 
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
 
-                  <img src="./assets/images/project-1.jpg" alt="finance" loading="lazy">
+                  <img src="./assets/images/amplifycache.png" alt="Serverless Data Pipeline for IoT" loading="lazy">
                 </figure>
 
-                <h3 class="project-title">Finance</h3>
+                <h3 class="project-title">Serverless Data Pipeline for IoT</h3>
 
-                <p class="project-category">Web development</p>
+                <p class="project-category">AWS</p>
 
               </a>
+
+              <div class="project-links">
+                <a href="https://github.com/TanseerS/serverless-data-pipeline" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
             </li>
 
-            <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="#">
-
+            <!-- PROJECT SLOT 2 (category options: aws | terraform | cicd | kubernetes)
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/project-2.png" alt="orizon" loading="lazy">
+                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
                 </figure>
-
-                <h3 class="project-title">Orizon</h3>
-
-                <p class="project-category">Web development</p>
-
+                <h3 class="project-title">Project Title</h3>
+                <p class="project-category">AWS</p>
               </a>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
             </li>
+            -->
 
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="#">
-
+            <!-- PROJECT SLOT 3 (category options: aws | terraform | cicd | kubernetes)
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/project-3.jpg" alt="fundo" loading="lazy">
+                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
                 </figure>
-
-                <h3 class="project-title">Fundo</h3>
-
-                <p class="project-category">Web design</p>
-
+                <h3 class="project-title">Project Title</h3>
+                <p class="project-category">AWS</p>
               </a>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
             </li>
+            -->
 
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="#">
-
+            <!-- PROJECT SLOT 4 (category options: aws | terraform | cicd | kubernetes)
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/project-4.png" alt="brawlhalla" loading="lazy">
+                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
                 </figure>
-
-                <h3 class="project-title">Brawlhalla</h3>
-
-                <p class="project-category">Applications</p>
-
+                <h3 class="project-title">Project Title</h3>
+                <p class="project-category">AWS</p>
               </a>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
             </li>
+            -->
 
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="#">
-
+            <!-- PROJECT SLOT 5 (category options: aws | terraform | cicd | kubernetes)
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/project-5.png" alt="dsm." loading="lazy">
+                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
                 </figure>
-
-                <h3 class="project-title">DSM.</h3>
-
-                <p class="project-category">Web design</p>
-
+                <h3 class="project-title">Project Title</h3>
+                <p class="project-category">AWS</p>
               </a>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
             </li>
+            -->
 
-            <li class="project-item  active" data-filter-item data-category="web design">
-              <a href="#">
-
+            <!-- PROJECT SLOT 6 (category options: aws | terraform | cicd | kubernetes)
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/project-6.png" alt="metaspark" loading="lazy">
+                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
                 </figure>
-
-                <h3 class="project-title">MetaSpark</h3>
-
-                <p class="project-category">Web design</p>
-
+                <h3 class="project-title">Project Title</h3>
+                <p class="project-category">AWS</p>
               </a>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
             </li>
+            -->
 
-            <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="#">
-
+            <!-- PROJECT SLOT 7 (category options: aws | terraform | cicd | kubernetes)
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/project-7.png" alt="summary" loading="lazy">
+                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
                 </figure>
-
-                <h3 class="project-title">Summary</h3>
-
-                <p class="project-category">Web development</p>
-
+                <h3 class="project-title">Project Title</h3>
+                <p class="project-category">AWS</p>
               </a>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
             </li>
+            -->
 
-            <li class="project-item  active" data-filter-item data-category="applications">
-              <a href="#">
-
+            <!-- PROJECT SLOT 8 (category options: aws | terraform | cicd | kubernetes)
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/project-8.jpg" alt="task manager" loading="lazy">
+                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
                 </figure>
-
-                <h3 class="project-title">Task Manager</h3>
-
-                <p class="project-category">Applications</p>
-
+                <h3 class="project-title">Project Title</h3>
+                <p class="project-category">AWS</p>
               </a>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
             </li>
+            -->
 
-            <li class="project-item  active" data-filter-item data-category="web development">
-              <a href="#">
-
+            <!-- PROJECT SLOT 9 (category options: aws | terraform | cicd | kubernetes)
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-
-                  <img src="./assets/images/project-9.png" alt="arrival" loading="lazy">
+                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
                 </figure>
-
-                <h3 class="project-title">Arrival</h3>
-
-                <p class="project-category">Web development</p>
-
+                <h3 class="project-title">Project Title</h3>
+                <p class="project-category">AWS</p>
               </a>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
             </li>
+            -->
+
+            <!-- PROJECT SLOT 10 (category options: aws | terraform | cicd | kubernetes)
+            <li class="project-item  active" data-filter-item data-category="aws">
+              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
+                <figure class="project-img">
+                  <div class="project-item-icon-box">
+                    <ion-icon name="eye-outline"></ion-icon>
+                  </div>
+                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
+                </figure>
+                <h3 class="project-title">Project Title</h3>
+                <p class="project-category">AWS</p>
+              </a>
+              <div class="project-links">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
+            </li>
+            -->
 
           </ul>
 
         </section>
+
+        <!--
+          - project modal
+        -->
+
+        <div class="modal-container" data-modal-container>
+
+          <div class="overlay" data-overlay></div>
+
+          <section class="project-modal">
+
+            <button class="modal-close-btn" data-modal-close-btn aria-label="Close project details">
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+
+            <figure class="project-modal-img">
+              <img data-modal-img alt="">
+            </figure>
+
+            <div class="project-modal-content">
+
+              <h3 class="h3 project-modal-title" data-modal-title></h3>
+
+              <p class="project-modal-category" data-modal-category></p>
+
+              <div class="project-modal-links">
+                <a class="project-modal-link" data-modal-github target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="logo-github"></ion-icon>
+                  <span>GitHub</span>
+                </a>
+                <a class="project-modal-link" data-modal-live target="_blank" rel="noopener noreferrer">
+                  <ion-icon name="open-outline"></ion-icon>
+                  <span>Live</span>
+                </a>
+              </div>
+
+            </div>
+
+          </section>
+
+        </div>
 
       </article>
 
