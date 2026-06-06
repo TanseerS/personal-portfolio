@@ -174,6 +174,275 @@ document.addEventListener("keydown", function (e) {
 
 
 
+// ---------- blog aggregator ----------
+
+// AWS Community Builder posts — add manually as you publish.
+// NOTE: excerpts and dates below are best-effort placeholders — overwrite with the actual post summary and publish date.
+const awsCommunityPosts = [
+  {
+    title: "Lambda Execution Roles Are Quietly Breaking Your Least Privilege Policy",
+    excerpt: "How Lambda execution roles can silently expand beyond their intended least-privilege scope, and what to do about it.",
+    url: "https://builder.aws.com/content/3DhPn3H3CpfAjEaq7YsSPcELir0/lambda-execution-roles-are-quietly-breaking-your-least-privilege-policy",
+    date: "2025-09-15",
+    coverImage: null
+  },
+  {
+    title: "Building a Scalable Reels Upload and Delivery System on AWS Serverless",
+    excerpt: "Designing a Reels-style short-video upload and delivery pipeline end-to-end on AWS serverless primitives.",
+    url: "https://builder.aws.com/content/3EIC3WEpCyEZbESZhEMXmMC2Abp/building-a-scalable-reels-upload-and-delivery-system-on-aws-serverless",
+    date: "2025-10-20",
+    coverImage: null
+  },
+  {
+    title: "How to Add a Custom Domain to AWS Cognito Google Login and the Errors Nobody Warns You About",
+    excerpt: "Wiring a custom domain into AWS Cognito's Google federated login — including the surprise errors the docs skip over.",
+    url: "https://builder.aws.com/content/3EZ8k6dUcgXTHIkBnA5OXBaIwF2/how-to-add-a-custom-domain-to-aws-cognito-google-login-and-the-errors-nobody-warns-you-about",
+    date: "2025-11-25",
+    coverImage: null
+  }
+];
+
+const BLOG_PAGE_SIZE = 6;
+const BLOG_EXCERPT_LEN = 120;
+const BLOG_PLATFORM_LABELS = {
+  hashnode: "Hashnode",
+  medium: "Medium",
+  devto: "DEV.to",
+  aws: "AWS Community"
+};
+
+const blogPostsList = document.querySelector("[data-blog-posts]");
+const blogLoadingEl = document.querySelector("[data-blog-loading]");
+const blogEmptyEl = document.querySelector("[data-blog-empty]");
+const blogPaginationEl = document.querySelector("[data-blog-pagination]");
+const blogPrevBtn = document.querySelector("[data-blog-prev]");
+const blogNextBtn = document.querySelector("[data-blog-next]");
+const blogPagesContainer = document.querySelector("[data-blog-pages]");
+const blogFilterBtns = document.querySelectorAll("[data-blog-filter]");
+
+let allBlogPosts = [];
+let currentBlogFilter = "all";
+let currentBlogPage = 1;
+
+const blogStripHtml = function (html) {
+  const tmp = document.createElement("div");
+  tmp.innerHTML = html || "";
+  return (tmp.textContent || tmp.innerText || "").replace(/\s+/g, " ").trim();
+};
+
+const blogEscapeHtml = function (text) {
+  const div = document.createElement("div");
+  div.textContent = text || "";
+  return div.innerHTML;
+};
+
+const blogTruncate = function (text, max) {
+  if (!text) return "";
+  if (text.length <= max) return text;
+  return text.slice(0, max).trimEnd() + "...";
+};
+
+const blogFormatDate = function (input) {
+  if (!input) return "";
+  const d = new Date(input);
+  if (isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
+};
+
+const fetchHashnodePosts = async function () {
+  const query = `{ user(username: "tanseerkhan") { posts(page: 1, pageSize: 20) { nodes { title brief slug publishedAt coverImage { url } url } } } }`;
+  try {
+    const resp = await fetch("https://gql.hashnode.com", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query })
+    });
+    if (!resp.ok) throw new Error("Hashnode HTTP " + resp.status);
+    const json = await resp.json();
+    const nodes = (json && json.data && json.data.user && json.data.user.posts && json.data.user.posts.nodes) || [];
+    return nodes.map(function (n) {
+      return {
+        platform: "hashnode",
+        title: n.title,
+        excerpt: n.brief || "",
+        url: n.url,
+        date: n.publishedAt,
+        coverImage: (n.coverImage && n.coverImage.url) || null
+      };
+    });
+  } catch (err) {
+    console.error("Hashnode fetch failed:", err);
+    return [];
+  }
+};
+
+const fetchDevtoPosts = async function () {
+  try {
+    const resp = await fetch("https://dev.to/api/articles?username=tanseer&per_page=20");
+    if (!resp.ok) throw new Error("DEV.to HTTP " + resp.status);
+    const data = await resp.json();
+    return data.map(function (a) {
+      return {
+        platform: "devto",
+        title: a.title,
+        excerpt: a.description || "",
+        url: a.url,
+        date: a.published_at,
+        coverImage: a.cover_image || null
+      };
+    });
+  } catch (err) {
+    console.error("DEV.to fetch failed:", err);
+    return [];
+  }
+};
+
+const fetchMediumPosts = async function () {
+  try {
+    const resp = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@khantanseer");
+    if (!resp.ok) throw new Error("Medium (rss2json) HTTP " + resp.status);
+    const json = await resp.json();
+    if (json.status !== "ok") throw new Error("Medium feed status: " + json.status);
+    return (json.items || []).map(function (item) {
+      return {
+        platform: "medium",
+        title: item.title,
+        excerpt: blogStripHtml(item.description || ""),
+        url: item.link,
+        date: item.pubDate,
+        coverImage: item.thumbnail || null
+      };
+    });
+  } catch (err) {
+    console.error("Medium fetch failed:", err);
+    return [];
+  }
+};
+
+const renderBlogCard = function (post) {
+  const platform = post.platform;
+  const label = BLOG_PLATFORM_LABELS[platform] || platform;
+  const cover = post.coverImage
+    ? '<img src="' + blogEscapeHtml(post.coverImage) + '" alt="' + blogEscapeHtml(post.title) + '" loading="lazy">'
+    : '<div class="blog-banner-placeholder" data-platform="' + platform + '">' + blogEscapeHtml(label) + '</div>';
+  const isoDate = post.date ? new Date(post.date).toISOString() : "";
+  const displayDate = blogFormatDate(post.date);
+  const excerpt = blogTruncate(post.excerpt || "", BLOG_EXCERPT_LEN);
+  const safeUrl = post.url || "#";
+  return (
+    '<li class="blog-post-item" data-platform="' + platform + '">' +
+      '<a href="' + blogEscapeHtml(safeUrl) + '" target="_blank" rel="noopener noreferrer">' +
+        '<figure class="blog-banner-box">' + cover + '</figure>' +
+        '<div class="blog-content">' +
+          '<div class="blog-meta">' +
+            '<span class="blog-platform-badge" data-platform="' + platform + '">' + blogEscapeHtml(label) + '</span>' +
+            (displayDate ? '<time datetime="' + blogEscapeHtml(isoDate) + '">' + blogEscapeHtml(displayDate) + '</time>' : '') +
+          '</div>' +
+          '<h3 class="h3 blog-item-title">' + blogEscapeHtml(post.title) + '</h3>' +
+          '<p class="blog-text">' + blogEscapeHtml(excerpt) + '</p>' +
+          '<span class="blog-read-more">Read more →</span>' +
+        '</div>' +
+      '</a>' +
+    '</li>'
+  );
+};
+
+const getFilteredBlogPosts = function () {
+  if (currentBlogFilter === "all") return allBlogPosts;
+  return allBlogPosts.filter(function (p) { return p.platform === currentBlogFilter; });
+};
+
+const renderBlog = function () {
+  const filtered = getFilteredBlogPosts();
+  const totalPages = Math.max(1, Math.ceil(filtered.length / BLOG_PAGE_SIZE));
+  if (currentBlogPage > totalPages) currentBlogPage = totalPages;
+
+  if (filtered.length === 0) {
+    blogPostsList.innerHTML = "";
+    blogEmptyEl.hidden = false;
+    blogPaginationEl.hidden = true;
+    return;
+  }
+  blogEmptyEl.hidden = true;
+
+  const start = (currentBlogPage - 1) * BLOG_PAGE_SIZE;
+  const pageItems = filtered.slice(start, start + BLOG_PAGE_SIZE);
+  blogPostsList.innerHTML = pageItems.map(renderBlogCard).join("");
+
+  blogPaginationEl.hidden = totalPages <= 1;
+  blogPrevBtn.disabled = currentBlogPage <= 1;
+  blogNextBtn.disabled = currentBlogPage >= totalPages;
+  blogPagesContainer.innerHTML = Array.from({ length: totalPages }, function (_, i) {
+    const page = i + 1;
+    return '<button class="blog-pagination-page' + (page === currentBlogPage ? " active" : "") + '" data-blog-page="' + page + '">' + page + '</button>';
+  }).join("");
+};
+
+const loadAllBlogPosts = async function () {
+  blogLoadingEl.hidden = false;
+  const [hashnode, devto, medium] = await Promise.all([
+    fetchHashnodePosts(),
+    fetchDevtoPosts(),
+    fetchMediumPosts()
+  ]);
+  const aws = awsCommunityPosts.map(function (p) {
+    return {
+      platform: "aws",
+      title: p.title,
+      excerpt: p.excerpt,
+      url: p.url,
+      date: p.date,
+      coverImage: p.coverImage
+    };
+  });
+  allBlogPosts = hashnode.concat(devto, medium, aws)
+    .filter(function (p) { return p && p.title && p.date; })
+    .sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
+  blogLoadingEl.hidden = true;
+  renderBlog();
+};
+
+for (let i = 0; i < blogFilterBtns.length; i++) {
+  blogFilterBtns[i].addEventListener("click", function () {
+    for (let j = 0; j < blogFilterBtns.length; j++) {
+      blogFilterBtns[j].classList.remove("active");
+    }
+    this.classList.add("active");
+    currentBlogFilter = this.dataset.blogFilter;
+    currentBlogPage = 1;
+    renderBlog();
+  });
+}
+
+blogPrevBtn.addEventListener("click", function () {
+  if (currentBlogPage > 1) {
+    currentBlogPage--;
+    renderBlog();
+  }
+});
+
+blogNextBtn.addEventListener("click", function () {
+  const totalPages = Math.ceil(getFilteredBlogPosts().length / BLOG_PAGE_SIZE);
+  if (currentBlogPage < totalPages) {
+    currentBlogPage++;
+    renderBlog();
+  }
+});
+
+blogPagesContainer.addEventListener("click", function (e) {
+  const btn = e.target.closest("[data-blog-page]");
+  if (!btn) return;
+  const page = parseInt(btn.dataset.blogPage, 10);
+  if (!isNaN(page)) {
+    currentBlogPage = page;
+    renderBlog();
+  }
+});
+
+loadAllBlogPosts();
+
+
+
 // contact form variables
 const form = document.querySelector("[data-form]");
 const formInputs = document.querySelectorAll("[data-form-input]");
