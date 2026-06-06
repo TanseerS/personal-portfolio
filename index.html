@@ -245,6 +245,18 @@
 
 
         <!--
+          - download cv
+        -->
+
+        <section class="cv-download">
+          <a href="./assets/cv/Tanseer-Khan-Resume.pdf" class="form-btn" download>
+            <ion-icon name="download-outline"></ion-icon>
+            <span>Download CV</span>
+          </a>
+        </section>
+
+
+        <!--
           - service
         -->
 
@@ -825,6 +837,44 @@
               <button class="navbar-link" data-blog-filter="aws">AWS Community</button>
             </li>
           </ul>
+
+          <div class="filter-select-box blog-select-box">
+
+            <button class="filter-select" data-blog-select>
+
+              <div class="select-value" data-blog-select-value>Select category</div>
+
+              <div class="select-icon">
+                <ion-icon name="chevron-down"></ion-icon>
+              </div>
+
+            </button>
+
+            <ul class="select-list">
+
+              <li class="select-item">
+                <button data-blog-select-item="all">All</button>
+              </li>
+
+              <li class="select-item">
+                <button data-blog-select-item="hashnode">Hashnode</button>
+              </li>
+
+              <li class="select-item">
+                <button data-blog-select-item="medium">Medium</button>
+              </li>
+
+              <li class="select-item">
+                <button data-blog-select-item="devto">DEV.to</button>
+              </li>
+
+              <li class="select-item">
+                <button data-blog-select-item="aws">AWS Community</button>
+              </li>
+
+            </ul>
+
+          </div>
         </nav>
 
         <section class="blog-posts">

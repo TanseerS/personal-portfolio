@@ -1102,6 +1102,7 @@ main {
 .blog-filter { margin-bottom: 25px; }
 
 .blog-filter .navbar-list {
+  display: none;
   justify-content: flex-start;
   padding: 0;
 }
@@ -1337,6 +1338,10 @@ textarea.form-input::-webkit-resizer { display: none; }
 .form-btn:disabled:hover::before { background: var(--bg-gradient-jet); }
 
 .form-btn.is-submitting { cursor: progress; }
+
+.cv-download { margin-bottom: 30px; }
+
+.cv-download .form-btn { text-decoration: none; }
 
 
 /**
@@ -1705,6 +1710,14 @@ textarea.form-input::-webkit-resizer { display: none; }
 
 
   /**
+   * BLOG
+   */
+
+  .blog-filter .navbar-list { display: flex; }
+
+
+
+  /**
    * CONTACT
    */
 
@@ -1714,7 +1727,9 @@ textarea.form-input::-webkit-resizer { display: none; }
     width: max-content;
     margin-left: auto;
   }
-  
+
+  .cv-download .form-btn { margin-left: 0; }
+
 }
 
 

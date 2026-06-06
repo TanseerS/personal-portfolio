@@ -402,15 +402,37 @@ const loadAllBlogPosts = async function () {
   renderBlog();
 };
 
+const blogSelect = document.querySelector("[data-blog-select]");
+const blogSelectValue = document.querySelector("[data-blog-select-value]");
+const blogSelectItems = document.querySelectorAll("[data-blog-select-item]");
+
+const applyBlogFilter = function (filterValue, label) {
+  for (let j = 0; j < blogFilterBtns.length; j++) {
+    blogFilterBtns[j].classList.remove("active");
+    if (blogFilterBtns[j].dataset.blogFilter === filterValue) {
+      blogFilterBtns[j].classList.add("active");
+    }
+  }
+  if (blogSelectValue) blogSelectValue.innerText = label;
+  currentBlogFilter = filterValue;
+  currentBlogPage = 1;
+  renderBlog();
+};
+
 for (let i = 0; i < blogFilterBtns.length; i++) {
   blogFilterBtns[i].addEventListener("click", function () {
-    for (let j = 0; j < blogFilterBtns.length; j++) {
-      blogFilterBtns[j].classList.remove("active");
-    }
-    this.classList.add("active");
-    currentBlogFilter = this.dataset.blogFilter;
-    currentBlogPage = 1;
-    renderBlog();
+    applyBlogFilter(this.dataset.blogFilter, this.innerText);
+  });
+}
+
+if (blogSelect) {
+  blogSelect.addEventListener("click", function () { elementToggleFunc(this); });
+}
+
+for (let i = 0; i < blogSelectItems.length; i++) {
+  blogSelectItems[i].addEventListener("click", function () {
+    elementToggleFunc(blogSelect);
+    applyBlogFilter(this.dataset.blogSelectItem, this.innerText);
   });
 }
 
