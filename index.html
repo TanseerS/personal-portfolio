@@ -867,8 +867,9 @@
         <section class="mapbox" data-mapbox>
           <figure>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d199666.5651251294!2d-121.58334177520186!3d38.56165006739519!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x809ac672b28397f9%3A0x921f6aaa74197fdb!2sSacramento%2C%20CA%2C%20USA!5e0!3m2!1sen!2sbd!4v1647608789441!5m2!1sen!2sbd"
-              width="400" height="300" loading="lazy"></iframe>
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d120868.24539645195!2d73.72748035!3d19.9974533!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bdded220de25627%3A0x67a7cfe3c994f672!2sNashik%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin"
+              width="400" height="300" style="border:0;" allowfullscreen=""
+              loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </figure>
         </section>
 
@@ -876,20 +877,33 @@
 
           <h3 class="h3 form-title">Contact Form</h3>
 
-          <form action="#" class="form" data-form>
+          <form action="#" class="form" data-form novalidate>
 
             <div class="input-wrapper">
-              <input type="text" name="fullname" class="form-input" placeholder="Full name" required data-form-input>
 
-              <input type="email" name="email" class="form-input" placeholder="Email address" required data-form-input>
+              <div class="form-field">
+                <input type="text" name="fullname" class="form-input" placeholder="Full name" autocomplete="name" required data-form-input>
+                <p class="form-error" data-form-error></p>
+              </div>
+
+              <div class="form-field">
+                <input type="email" name="email" class="form-input" placeholder="Email address" autocomplete="email" required data-form-input>
+                <p class="form-error" data-form-error></p>
+              </div>
+
             </div>
 
-            <textarea name="message" class="form-input" placeholder="Your Message" required data-form-input></textarea>
+            <div class="form-field">
+              <textarea name="message" class="form-input" placeholder="Your Message" required minlength="10" data-form-input></textarea>
+              <p class="form-error" data-form-error></p>
+            </div>
 
-            <button class="form-btn" type="submit" disabled data-form-btn>
+            <button class="form-btn" type="submit" data-form-btn>
               <ion-icon name="paper-plane"></ion-icon>
-              <span>Send Message</span>
+              <span data-form-btn-label>Send Message</span>
             </button>
+
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
 
           </form>
 

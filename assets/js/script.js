@@ -447,20 +447,115 @@ loadAllBlogPosts();
 const form = document.querySelector("[data-form]");
 const formInputs = document.querySelectorAll("[data-form-input]");
 const formBtn = document.querySelector("[data-form-btn]");
+const formBtnLabel = document.querySelector("[data-form-btn-label]");
+const formStatus = document.querySelector("[data-form-status]");
 
-// add event to all form input field
+const API_ENDPOINT = "PLACEHOLDER_API_URL"; // Replace with actual API Gateway URL after backend deployment
+
+const setFieldError = function (input, message) {
+  const field = input.closest(".form-field");
+  if (!field) return;
+  const errorEl = field.querySelector("[data-form-error]");
+  if (!errorEl) return;
+  if (message) {
+    errorEl.textContent = message;
+    errorEl.classList.add("active");
+    input.classList.add("has-error");
+  } else {
+    errorEl.textContent = "";
+    errorEl.classList.remove("active");
+    input.classList.remove("has-error");
+  }
+};
+
+const validateField = function (input) {
+  const value = (input.value || "").trim();
+  switch (input.name) {
+    case "fullname":
+      if (!value) return "Please enter your name.";
+      return null;
+    case "email":
+      if (!value) return "Please enter your email address.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "Please enter a valid email address.";
+      return null;
+    case "message":
+      if (!value) return "Please enter a message.";
+      if (value.length < 10) return "Message must be at least 10 characters.";
+      return null;
+    default:
+      return null;
+  }
+};
+
+// clear inline error and any prior status when a field gains focus
 for (let i = 0; i < formInputs.length; i++) {
-  formInputs[i].addEventListener("input", function () {
-
-    // check form validation
-    if (form.checkValidity()) {
-      formBtn.removeAttribute("disabled");
-    } else {
-      formBtn.setAttribute("disabled", "");
+  formInputs[i].addEventListener("focus", function () {
+    setFieldError(this, null);
+    if (formStatus.classList.contains("active")) {
+      formStatus.classList.remove("active", "success", "error");
+      formStatus.textContent = "";
     }
-
   });
 }
+
+const setFormStatus = function (kind, message) {
+  formStatus.classList.remove("success", "error", "active");
+  if (!kind) {
+    formStatus.textContent = "";
+    return;
+  }
+  formStatus.textContent = message;
+  formStatus.classList.add(kind, "active");
+};
+
+const setSubmitting = function (isSubmitting) {
+  if (isSubmitting) {
+    formBtn.setAttribute("disabled", "");
+    formBtn.classList.add("is-submitting");
+    formBtnLabel.textContent = "Sending…";
+  } else {
+    formBtn.removeAttribute("disabled");
+    formBtn.classList.remove("is-submitting");
+    formBtnLabel.textContent = "Send Message";
+  }
+};
+
+form.addEventListener("submit", async function (e) {
+  e.preventDefault();
+  setFormStatus(null);
+
+  let allValid = true;
+  for (let i = 0; i < formInputs.length; i++) {
+    const err = validateField(formInputs[i]);
+    setFieldError(formInputs[i], err);
+    if (err) allValid = false;
+  }
+  if (!allValid) return;
+
+  const payload = {
+    name: form.elements.fullname.value.trim(),
+    email: form.elements.email.value.trim(),
+    message: form.elements.message.value.trim()
+  };
+
+  setSubmitting(true);
+
+  try {
+    const resp = await fetch(API_ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    setFormStatus("success", "Thanks for reaching out! I'll get back to you soon.");
+    form.reset();
+  } catch (err) {
+    console.error("Contact form submission failed:", err);
+    setFormStatus("error", "Something went wrong. Please try again or email me directly at ktanseer2@gmail.com");
+  } finally {
+    setSubmitting(false);
+  }
+});
 
 
 

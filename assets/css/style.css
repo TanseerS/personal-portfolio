@@ -1336,6 +1336,50 @@ textarea.form-input::-webkit-resizer { display: none; }
 
 .form-btn:disabled:hover::before { background: var(--bg-gradient-jet); }
 
+.form-btn.is-submitting { cursor: progress; }
+
+
+/**
+ * contact form validation states
+ */
+
+.form-error {
+  display: none;
+  margin-top: 6px;
+  color: var(--bittersweet-shimmer);
+  font-size: var(--fs-7);
+  font-weight: var(--fw-300);
+}
+
+.form-error.active { display: block; }
+
+.form-input.has-error,
+.form-input.has-error:focus { border-color: var(--bittersweet-shimmer); }
+
+.form-status {
+  display: none;
+  margin-top: 20px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: var(--fs-6);
+  font-weight: var(--fw-400);
+  line-height: 1.5;
+}
+
+.form-status.active { display: block; }
+
+.form-status.success {
+  color: hsl(140, 50%, 72%);
+  background: hsla(140, 50%, 30%, 0.18);
+  border: 1px solid hsla(140, 50%, 45%, 0.5);
+}
+
+.form-status.error {
+  color: var(--bittersweet-shimmer);
+  background: hsla(0, 43%, 30%, 0.18);
+  border: 1px solid hsla(0, 43%, 51%, 0.5);
+}
+
 
 
 
