@@ -41,6 +41,44 @@ const filterFunc = function (selectedValue) {
 
   }
 
+  applyPagination();
+
+}
+
+// infinite-scroll pagination — show this many active items per page
+const PAGE_SIZE = 6;
+
+const applyPagination = function () {
+  let shown = 0;
+  for (let i = 0; i < filterItems.length; i++) {
+    if (filterItems[i].classList.contains("active") && shown < PAGE_SIZE) {
+      filterItems[i].classList.add("in-view");
+      shown++;
+    } else {
+      filterItems[i].classList.remove("in-view");
+    }
+  }
+};
+
+const loadMore = function () {
+  let added = 0;
+  for (let i = 0; i < filterItems.length && added < PAGE_SIZE; i++) {
+    const item = filterItems[i];
+    if (item.classList.contains("active") && !item.classList.contains("in-view")) {
+      item.classList.add("in-view");
+      added++;
+    }
+  }
+};
+
+applyPagination();
+
+const loadMoreSentinel = document.querySelector("[data-load-more-sentinel]");
+if (loadMoreSentinel && "IntersectionObserver" in window) {
+  const sentinelObserver = new IntersectionObserver(function (entries) {
+    if (entries[0].isIntersecting) loadMore();
+  }, { rootMargin: "200px" });
+  sentinelObserver.observe(loadMoreSentinel);
 }
 
 let lastClickedBtn = filterBtn[0];
@@ -95,6 +133,7 @@ const modalTriggers = document.querySelectorAll("[data-modal-trigger]");
 const modalImg = document.querySelector("[data-modal-img]");
 const modalTitle = document.querySelector("[data-modal-title]");
 const modalCategory = document.querySelector("[data-modal-category]");
+const modalDescription = document.querySelector("[data-modal-description]");
 const modalGithub = document.querySelector("[data-modal-github]");
 const modalLive = document.querySelector("[data-modal-live]");
 
@@ -111,14 +150,14 @@ for (let i = 0; i < modalTriggers.length; i++) {
     const img = item.querySelector(".project-img img");
     const title = item.querySelector(".project-title");
     const category = item.querySelector(".project-category");
-    const linkAnchors = item.querySelectorAll(".project-links a");
 
     modalImg.src = img ? img.src : "";
     modalImg.alt = img ? img.alt : "";
     modalTitle.innerText = title ? title.innerText : "";
     modalCategory.innerText = category ? category.innerText : "";
-    modalGithub.href = linkAnchors[0] ? linkAnchors[0].href : "#";
-    modalLive.href = linkAnchors[1] ? linkAnchors[1].href : "#";
+    modalDescription.innerText = item.dataset.description || "";
+    modalGithub.href = item.dataset.github || "#";
+    modalLive.href = item.dataset.live || "#";
 
     projectModalFunc();
   });

@@ -754,9 +754,16 @@ main {
 
 .project-item { display: none; }
 
-.project-item.active {
+.project-item.active.in-view {
   display: block;
   animation: scaleUp 0.25s ease forwards;
+}
+
+.load-more-sentinel {
+  grid-column: 1 / -1;
+  height: 1px;
+  margin-top: -1px;
+  pointer-events: none;
 }
 
 @keyframes scaleUp {
@@ -854,26 +861,6 @@ main {
 }
 
 .project-item > a:hover .project-thumb-placeholder { transform: scale(1.1); }
-
-.project-links {
-  display: flex;
-  gap: 14px;
-  margin: 12px 10px 0;
-}
-
-.project-links a {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--light-gray);
-  font-size: var(--fs-7);
-  transition: color var(--transition-1);
-}
-
-.project-links a:hover { color: var(--orange-yellow-crayola); }
-
-.project-links ion-icon { font-size: 16px; }
-
 
 /**
  * project modal
@@ -982,6 +969,14 @@ main {
   color: var(--light-gray-70);
   font-size: var(--fs-6);
   font-weight: var(--fw-300);
+  margin-bottom: 12px;
+}
+
+.project-modal-description {
+  color: var(--light-gray);
+  font-size: var(--fs-6);
+  font-weight: var(--fw-300);
+  line-height: 1.6;
   margin-bottom: 20px;
 }
 
@@ -1642,7 +1637,7 @@ textarea.form-input::-webkit-resizer { display: none; }
    * PROJECTS
    */
 
-  .project-list { grid-template-columns: repeat(3, 1fr); }
+  .project-list { grid-template-columns: 1fr 1fr; }
 
 
 
