@@ -250,24 +250,19 @@ const blogFormatDate = function (input) {
 };
 
 const fetchHashnodePosts = async function () {
-  const query = `{ user(username: "tanseerkhan") { posts(page: 1, pageSize: 20) { nodes { title brief slug publishedAt coverImage { url } url } } } }`;
   try {
-    const resp = await fetch("https://gql.hashnode.com", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query })
-    });
-    if (!resp.ok) throw new Error("Hashnode HTTP " + resp.status);
+    const resp = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://devops-aws-cloud.hashnode.dev/rss.xml");
+    if (!resp.ok) throw new Error("Hashnode (rss2json) HTTP " + resp.status);
     const json = await resp.json();
-    const nodes = (json && json.data && json.data.user && json.data.user.posts && json.data.user.posts.nodes) || [];
-    return nodes.map(function (n) {
+    if (json.status !== "ok") throw new Error("Hashnode feed status: " + json.status);
+    return (json.items || []).map(function (item) {
       return {
         platform: "hashnode",
-        title: n.title,
-        excerpt: n.brief || "",
-        url: n.url,
-        date: n.publishedAt,
-        coverImage: (n.coverImage && n.coverImage.url) || null
+        title: item.title,
+        excerpt: blogStripHtml(item.description || ""),
+        url: item.link,
+        date: item.pubDate,
+        coverImage: item.thumbnail || null
       };
     });
   } catch (err) {
