@@ -41,45 +41,79 @@ const filterFunc = function (selectedValue) {
 
   }
 
-  applyPagination();
+  currentProjectPage = 1;
+  renderProjects();
 
 }
 
-// infinite-scroll pagination — show this many active items per page
+// pagination — show this many active items per page
 const PAGE_SIZE = 6;
+let currentProjectPage = 1;
 
-const applyPagination = function () {
-  let shown = 0;
+const projectPaginationEl = document.querySelector("[data-project-pagination]");
+const projectPrevBtn = document.querySelector("[data-project-prev]");
+const projectNextBtn = document.querySelector("[data-project-next]");
+const projectPagesContainer = document.querySelector("[data-project-pages]");
+
+const getActiveProjectCount = function () {
+  let count = 0;
   for (let i = 0; i < filterItems.length; i++) {
-    if (filterItems[i].classList.contains("active") && shown < PAGE_SIZE) {
-      filterItems[i].classList.add("in-view");
-      shown++;
-    } else {
-      filterItems[i].classList.remove("in-view");
-    }
+    if (filterItems[i].classList.contains("active")) count++;
   }
+  return count;
 };
 
-const loadMore = function () {
-  let added = 0;
-  for (let i = 0; i < filterItems.length && added < PAGE_SIZE; i++) {
-    const item = filterItems[i];
-    if (item.classList.contains("active") && !item.classList.contains("in-view")) {
-      item.classList.add("in-view");
-      added++;
-    }
+const renderProjects = function () {
+  const activeItems = [];
+  for (let i = 0; i < filterItems.length; i++) {
+    filterItems[i].classList.remove("in-view");
+    if (filterItems[i].classList.contains("active")) activeItems.push(filterItems[i]);
   }
+
+  const totalPages = Math.max(1, Math.ceil(activeItems.length / PAGE_SIZE));
+  if (currentProjectPage > totalPages) currentProjectPage = totalPages;
+
+  const start = (currentProjectPage - 1) * PAGE_SIZE;
+  const pageItems = activeItems.slice(start, start + PAGE_SIZE);
+  for (let i = 0; i < pageItems.length; i++) {
+    pageItems[i].classList.add("in-view");
+  }
+
+  projectPaginationEl.hidden = totalPages <= 1;
+  projectPrevBtn.disabled = currentProjectPage <= 1;
+  projectNextBtn.disabled = currentProjectPage >= totalPages;
+  projectPagesContainer.innerHTML = Array.from({ length: totalPages }, function (_, i) {
+    const page = i + 1;
+    return '<button class="blog-pagination-page' + (page === currentProjectPage ? " active" : "") + '" data-project-page="' + page + '">' + page + '</button>';
+  }).join("");
 };
 
-applyPagination();
+renderProjects();
 
-const loadMoreSentinel = document.querySelector("[data-load-more-sentinel]");
-if (loadMoreSentinel && "IntersectionObserver" in window) {
-  const sentinelObserver = new IntersectionObserver(function (entries) {
-    if (entries[0].isIntersecting) loadMore();
-  }, { rootMargin: "200px" });
-  sentinelObserver.observe(loadMoreSentinel);
-}
+projectPrevBtn.addEventListener("click", function () {
+  if (currentProjectPage > 1) {
+    currentProjectPage--;
+    renderProjects();
+  }
+});
+
+projectNextBtn.addEventListener("click", function () {
+  const totalPages = Math.ceil(getActiveProjectCount() / PAGE_SIZE);
+  if (currentProjectPage < totalPages) {
+    currentProjectPage++;
+    renderProjects();
+  }
+});
+
+projectPagesContainer.addEventListener("click", function (e) {
+  const btn = e.target.closest("[data-project-page]");
+  if (!btn) return;
+  const page = parseInt(btn.dataset.projectPage, 10);
+  if (!isNaN(page)) {
+    currentProjectPage = page;
+    renderProjects();
+  }
+});
 
 let lastClickedBtn = filterBtn[0];
 
@@ -111,9 +145,8 @@ activateSelectItem(0, "all");
 // activateFilterBtn(1, "aws");
 // activateSelectItem(1, "aws");
 
-// Uncomment when projects are added for this category
-// activateFilterBtn(2, "terraform");
-// activateSelectItem(2, "terraform");
+activateFilterBtn(2, "terraform");
+activateSelectItem(2, "terraform");
 
 // Uncomment when projects are added for this category
 // activateFilterBtn(3, "cicd");
@@ -184,7 +217,7 @@ const awsCommunityPosts = [
     excerpt: "How Lambda execution roles can silently expand beyond their intended least-privilege scope, and what to do about it.",
     url: "https://builder.aws.com/content/3DhPn3H3CpfAjEaq7YsSPcELir0/lambda-execution-roles-are-quietly-breaking-your-least-privilege-policy",
     date: "2025-09-15",
-    coverImage: null
+    coverImage: "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fqy1dd8u74pif0fgcs0uj.png"
   },
   {
     title: "Building a Scalable Reels Upload and Delivery System on AWS Serverless",
@@ -198,14 +231,13 @@ const awsCommunityPosts = [
     excerpt: "Wiring a custom domain into AWS Cognito's Google federated login — including the surprise errors the docs skip over.",
     url: "https://builder.aws.com/content/3EZ8k6dUcgXTHIkBnA5OXBaIwF2/how-to-add-a-custom-domain-to-aws-cognito-google-login-and-the-errors-nobody-warns-you-about",
     date: "2025-11-25",
-    coverImage: null
+    coverImage: "https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fj9na5yzknesyjj7nazwv.png"
   }
 ];
 
 const BLOG_PAGE_SIZE = 6;
 const BLOG_EXCERPT_LEN = 120;
 const BLOG_PLATFORM_LABELS = {
-  hashnode: "Hashnode",
   medium: "Medium",
   devto: "DEV.to",
   aws: "AWS Community"
@@ -236,6 +268,12 @@ const blogEscapeHtml = function (text) {
   return div.innerHTML;
 };
 
+// rss2json leaves `thumbnail` empty for Medium feeds — the cover is the first <img> in the post HTML
+const blogFirstImage = function (html) {
+  const m = /<img[^>]+src="([^">]+)"/i.exec(html || "");
+  return m ? m[1] : null;
+};
+
 const blogTruncate = function (text, max) {
   if (!text) return "";
   if (text.length <= max) return text;
@@ -247,28 +285,6 @@ const blogFormatDate = function (input) {
   const d = new Date(input);
   if (isNaN(d.getTime())) return "";
   return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
-};
-
-const fetchHashnodePosts = async function () {
-  try {
-    const resp = await fetch("https://api.rss2json.com/v1/api.json?rss_url=https://devops-aws-cloud.hashnode.dev/rss.xml");
-    if (!resp.ok) throw new Error("Hashnode (rss2json) HTTP " + resp.status);
-    const json = await resp.json();
-    if (json.status !== "ok") throw new Error("Hashnode feed status: " + json.status);
-    return (json.items || []).map(function (item) {
-      return {
-        platform: "hashnode",
-        title: item.title,
-        excerpt: blogStripHtml(item.description || ""),
-        url: item.link,
-        date: item.pubDate,
-        coverImage: item.thumbnail || null
-      };
-    });
-  } catch (err) {
-    console.error("Hashnode fetch failed:", err);
-    return [];
-  }
 };
 
 const fetchDevtoPosts = async function () {
@@ -305,7 +321,7 @@ const fetchMediumPosts = async function () {
         excerpt: blogStripHtml(item.description || ""),
         url: item.link,
         date: item.pubDate,
-        coverImage: item.thumbnail || null
+        coverImage: item.thumbnail || blogFirstImage(item.content || item.description) || null
       };
     });
   } catch (err) {
@@ -375,8 +391,7 @@ const renderBlog = function () {
 
 const loadAllBlogPosts = async function () {
   blogLoadingEl.hidden = false;
-  const [hashnode, devto, medium] = await Promise.all([
-    fetchHashnodePosts(),
+  const [devto, medium] = await Promise.all([
     fetchDevtoPosts(),
     fetchMediumPosts()
   ]);
@@ -390,7 +405,7 @@ const loadAllBlogPosts = async function () {
       coverImage: p.coverImage
     };
   });
-  allBlogPosts = hashnode.concat(devto, medium, aws)
+  allBlogPosts = devto.concat(medium, aws)
     .filter(function (p) { return p && p.title && p.date; })
     .sort(function (a, b) { return new Date(b.date) - new Date(a.date); });
   blogLoadingEl.hidden = true;

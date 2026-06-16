@@ -759,27 +759,37 @@ main {
   animation: scaleUp 0.25s ease forwards;
 }
 
-.load-more-sentinel {
-  grid-column: 1 / -1;
-  height: 1px;
-  margin-top: -1px;
-  pointer-events: none;
-}
-
 @keyframes scaleUp {
   0% { transform: scale(0.5); }
   100% { transform: scale(1); }
 }
 
-.project-item > a { width: 100%; }
+.project-item > a {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: var(--border-gradient-onyx);
+  box-shadow: var(--shadow-4);
+  border-radius: 16px;
+  z-index: 1;
+}
+
+.project-item > a::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: var(--eerie-black-1);
+  z-index: -1;
+}
 
 .project-img {
   position: relative;
   width: 100%;
   height: 200px;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  margin-bottom: 15px;
 }
 
 .project-img::before {
@@ -829,21 +839,20 @@ main {
 
 .project-item > a:hover img { transform: scale(1.1); }
 
-.project-title,
-.project-category { margin-left: 10px; }
-
 .project-title {
   color: var(--white-2);
   font-size: var(--fs-5);
   font-weight: var(--fw-400);
   text-transform: capitalize;
   line-height: 1.3;
+  padding: 15px 15px 0;
 }
 
 .project-category {
   color: var(--light-gray-70);
   font-size: var(--fs-6);
   font-weight: var(--fw-300);
+  padding: 4px 15px 15px;
 }
 
 .project-thumb-placeholder {
@@ -1120,7 +1129,6 @@ main {
   white-space: nowrap;
 }
 
-.blog-platform-badge[data-platform="hashnode"] { background: #2962ff18; color: #2962ff; }
 .blog-platform-badge[data-platform="medium"]   { background: #00ab6c18; color: #00ab6c; }
 .blog-platform-badge[data-platform="devto"]    { background: #ffffff1a; color: #ffffff; }
 .blog-platform-badge[data-platform="aws"]      { background: #ff990018; color: #FF9900; }
@@ -1140,7 +1148,6 @@ main {
   transition: var(--transition-1);
 }
 
-.blog-banner-placeholder[data-platform="hashnode"] { color: #2962ff; }
 .blog-banner-placeholder[data-platform="medium"]   { color: #00ab6c; }
 .blog-banner-placeholder[data-platform="devto"]    { color: #e6e6e6; }
 .blog-banner-placeholder[data-platform="aws"]      { color: #FF9900; }
@@ -1408,10 +1415,9 @@ textarea.form-input::-webkit-resizer { display: none; }
 
 
   /**
-   * #PROJECTS, BLOG 
+   * #PROJECTS, BLOG
    */
 
-  .project-img,
   .blog-banner-box { height: auto; }
 
 }
@@ -1832,6 +1838,8 @@ textarea.form-input::-webkit-resizer { display: none; }
    */
 
   .project-list { grid-template-columns: 1fr 1fr; }
+
+  .project-img { height: 230px; }
 
 
 

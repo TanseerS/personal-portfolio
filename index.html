@@ -534,7 +534,7 @@
             </li>
 
             <li class="filter-item">
-              <button data-filter-btn disabled>Terraform</button>
+              <button data-filter-btn>Terraform</button>
             </li>
 
             <li class="filter-item">
@@ -570,7 +570,7 @@
               </li>
 
               <li class="select-item">
-                <button data-select-item disabled>Terraform</button>
+                <button data-select-item>Terraform</button>
               </li>
 
               <li class="select-item">
@@ -605,20 +605,23 @@
               </a>
             </li>
 
-            <!-- PROJECT SLOT 2 (category options: aws | terraform | cicd | kubernetes)
-            <li class="project-item  active" data-filter-item data-category="aws" data-description="Short project description goes here." data-github="#" data-live="#">
-              <a href="#" target="_blank" rel="noopener noreferrer" data-modal-trigger>
+            <li class="project-item  active" data-filter-item data-category="terraform" data-description="A Dropbox-style serverless file storage system on AWS, fully managed with Terraform — secure uploads via S3 presigned URLs, metadata tracking in DynamoDB, SNS notifications on upload, and global delivery through CloudFront." data-github="https://github.com/TanseerS/AWS1-Dropbox" data-live="#">
+              <a href="https://github.com/TanseerS/AWS1-Dropbox" target="_blank" rel="noopener noreferrer" data-modal-trigger>
+
                 <figure class="project-img">
                   <div class="project-item-icon-box">
                     <ion-icon name="eye-outline"></ion-icon>
                   </div>
-                  <div class="project-thumb-placeholder">Tag 1 · Tag 2 · Tag 3</div>
+
+                  <img src="./assets/images/serverless-dropbox-architecture.png" alt="Dropbox-Style Serverless Storage on AWS" loading="lazy">
                 </figure>
-                <h3 class="project-title">Project Title</h3>
-                <p class="project-category">AWS</p>
+
+                <h3 class="project-title">Dropbox-Style Serverless Storage</h3>
+
+                <p class="project-category">Terraform</p>
+
               </a>
             </li>
-            -->
 
             <!-- PROJECT SLOT 3 (category options: aws | terraform | cicd | kubernetes)
             <li class="project-item  active" data-filter-item data-category="aws" data-description="Short project description goes here." data-github="#" data-live="#">
@@ -742,7 +745,11 @@
 
           </ul>
 
-          <div class="load-more-sentinel" data-load-more-sentinel></div>
+          <nav class="blog-pagination" data-project-pagination hidden aria-label="Projects pagination">
+            <button class="blog-pagination-btn" data-project-prev aria-label="Previous page">← Prev</button>
+            <div class="blog-pagination-pages" data-project-pages></div>
+            <button class="blog-pagination-btn" data-project-next aria-label="Next page">Next →</button>
+          </nav>
 
         </section>
 
@@ -811,9 +818,6 @@
               <button class="navbar-link  active" data-blog-filter="all">All</button>
             </li>
             <li class="navbar-item">
-              <button class="navbar-link" data-blog-filter="hashnode">Hashnode</button>
-            </li>
-            <li class="navbar-item">
               <button class="navbar-link" data-blog-filter="medium">Medium</button>
             </li>
             <li class="navbar-item">
@@ -840,10 +844,6 @@
 
               <li class="select-item">
                 <button data-blog-select-item="all">All</button>
-              </li>
-
-              <li class="select-item">
-                <button data-blog-select-item="hashnode">Hashnode</button>
               </li>
 
               <li class="select-item">
